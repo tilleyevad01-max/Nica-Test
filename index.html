@@ -2,26 +2,38 @@
 <html lang="uz">
 <head>
   <meta charset="UTF-8">
-  <title>DOCX Test Tizimi</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nica quiz bot</title>
+
+  <!-- Mammoth.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.9/mammoth.browser.min.js"></script>
+
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="container">
+    <h1>Test Sayti</h1>
+    
+    <div id="file-section">
+      <input type="file" id="docx-file" accept=".docx">
+      <button id="start-btn" disabled>Testni boshlash</button>
+    </div>
 
-<h2>DOCX Test Tizimi</h2>
+    <div id="quiz-section" class="hidden">
+      <div id="question-container"></div>
+      <button id="next-btn">Keyingi</button>
+    </div>
 
-<!-- Bosh sahifa -->
-<div id="home">
-  <input type="file" id="fileInput" accept=".txt,.docx">
-  <br><br>
-  <button id="startBtn">Testni boshlash</button>
-</div>
+    <div id="result-section" class="hidden">
+      <h2>Natijalar</h2>
+      <p id="summary"></p>
+      <div id="wrong-answers"></div>
+      <button id="retry-btn">Qayta ishlash</button>
+      <button id="exit-btn">Chiqish</button>
+    </div>
+  </div>
 
-<!-- Test oynasi -->
-<div id="test" style="display:none;">
-  <h3 id="question"></h3>
-  <div id="answers"></div>
-  <button id="skipBtn">Keyingi</button>
-</div>
-
-<!-- Natija oyn
+  <script src="script.js"></script>
+</body>
+    </html>
