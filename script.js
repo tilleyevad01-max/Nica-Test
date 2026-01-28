@@ -19,12 +19,19 @@ fileInput.addEventListener("change", () => {
   const file = fileInput.files[0];
   if (!file) return;
 
-  mammoth.extractRawText({ arrayBuffer: file.arrayBuffer() }).then(result => {
-    parseQuestions(result.value);
-    if (questions.length > 0) startBtn.disabled = false;
-  }).catch(err => {
-    alert("Faylni o‘qib bo‘lmadi: " + err);
-  });
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const arrayBuffer = e.target.result;
+    mammoth.extractRawText({ arrayBuffer: arrayBuffer })
+      .then(result => {
+        parseQuestions(result.value);
+        if (questions.length > 0) startBtn.disabled = false;
+      })
+      .catch(err => {
+        alert("Faylni o‘qib bo‘lmadi: " + err);
+      });
+  };
+  reader.readAsArrayBuffer(file);
 });
 
 // Savollarni tahlil qilish
@@ -47,10 +54,7 @@ function parseQuestions(text) {
   });
   if (currentQ) questions.push(currentQ);
 
-  // Random variantlarni aralashtirish
-  questions.forEach(q => {
-    q.options = shuffleArray(q.options);
-  });
+  questions.forEach(q => q.options = shuffleArray(q.options));
 }
 
 // Start test
@@ -66,7 +70,7 @@ startBtn.addEventListener("click", () => {
 function showQuestion() {
   const q = questions[currentIndex];
   questionContainer.innerHTML = `<h3>${q.question}</h3>`;
-  q.options.forEach((opt, i) => {
+  q.options.forEach((opt) => {
     const optionHTML = `<label class="option">
       <input type="radio" name="option" value="${opt}"> ${opt}
     </label>`;
@@ -132,4 +136,4 @@ exitBtn.addEventListener("click", () => {
 // Helper: array aralashtirish
 function shuffleArray(array) {
   return array.sort(() => Math.random() - 0.5);
-    }
+                            }
