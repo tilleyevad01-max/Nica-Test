@@ -1,81 +1,70 @@
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(120deg, #e0f7fa, #ffffff);
-    text-align: center;
-    padding: 20px;
-    margin: 0;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(120deg, #f6d365, #fda085);
+  margin: 0;
+  padding: 0;
 }
 
-h2 {
-    color: #00796b;
-    font-size: 2rem;
-    margin-bottom: 20px;
-}
-h3 {
-    color: #004d40;
-    font-size: 1.5rem;
-    margin-bottom: 15px;
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
-input[type="file"] {
-    padding: 12px;
-    border: 2px solid #004d40;
-    border-radius: 8px;
-    background-color: #e0f2f1;
-    margin: 10px 0;
+h1, h2 {
+  text-align: center;
+  color: #333;
+}
+
+input[type=file] {
+  display: block;
+  margin: 20px auto;
 }
 
 button {
-    background-color: #00796b;
-    color: white;
-    border: none;
-    padding: 14px 30px;
-    margin: 8px 5px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  display: block;
+  margin: 15px auto;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  background-color: #ff7f50;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
 button:hover {
-    background-color: #004d40;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+  background-color: #ff5722;
 }
 
-#answers {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.hidden {
+  display: none;
 }
 
-#answers button {
-    width: 80%;
-    max-width: 400px;
+#question-container {
+  margin-top: 20px;
 }
 
-#result {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 15px;
-    display: inline-block;
-    box-shadow: 0 0 20px rgba(0,0,0,0.15);
-    text-align: left;
-    max-width: 500px;
+.option {
+  display: block;
+  margin: 10px 0;
 }
 
-#wrongList p {
-    border-top: 1px solid #ccc;
-    padding: 8px 0;
-    margin: 5px 0;
+.option input {
+  margin-right: 10px;
 }
 
-@media (max-width: 600px) {
-    body { padding: 15px; }
-    h2 { font-size: 1.6rem; }
-    h3 { font-size: 1.2rem; }
-    button { width: 90%; padding: 12px; font-size: 14px; }
-    #result { width: 95%; padding: 15px; }
-        }
+#wrong-answers {
+  margin-top: 20px;
+  background: #ffe5e5;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+#wrong-answers p {
+  margin: 5px 0;
+    }
