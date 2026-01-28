@@ -5,7 +5,7 @@ let current = 0;
 let correct = 0;
 let wrong = 0;
 let skipped = 0;
-let wrongDetails = []; // Xato savollar + to'g'ri javoblar
+let wrongDetails = [];
 
 const startBtn = document.getElementById("startBtn");
 const skipBtn = document.getElementById("skipBtn");
@@ -79,7 +79,11 @@ function showQuestion() {
 
 skipBtn.onclick = () => {
   skipped++;
-  wrongDetails.push({question: questions[current].question, correct: questions[current].correct, yourAnswer: "Tashlab ketilgan"});
+  wrongDetails.push({
+    question: questions[current].question,
+    correct: questions[current].correct,
+    yourAnswer: "Tashlab ketilgan"
+  });
   current++;
   showQuestion();
 };
@@ -92,15 +96,23 @@ function finishTest() {
     `To‘g‘ri: ${correct}, Noto‘g‘ri: ${wrong}, Tashlab ketilgan: ${skipped}`;
 
   const wrongBox = document.getElementById("wrongList");
-  wrongBox.innerHTML = "<h4>Xato qilgan savollar:</h4>";
+  wrongBox.innerHTML = "<h4>Xato qilgan savollar va javoblar:</h4>";
   wrongDetails.forEach(item => {
     const p = document.createElement("p");
-    p.innerHTML = `<strong>${item.question}</strong><br>To'g'ri javob: ${item.correct}<br>Sizning javob: ${item.yourAnswer}`;
+    p.innerHTML = `<strong>Savol:</strong> ${item.question}<br>
+                   <strong>To'g'ri javob:</strong> ${item.correct}<br>
+                   <strong>Sizning javobingiz:</strong> ${item.yourAnswer}`;
     wrongBox.appendChild(p);
   });
 }
 
+// Qayta ishlash va chiqish
 restartBtn.onclick = () => location.reload();
-exitBtn.onclick = () => location.reload();
+exitBtn.onclick = () => {
+  document.getElementById("result").style.display = "none";
+  document.getElementById("home").style.display = "block";
+  // Stat va wrong list tozalash
+  current = 0; correct = 0; wrong = 0; skipped = 0; wrongDetails = [];
+};
 
 });
