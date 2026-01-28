@@ -1,127 +1,135 @@
-document.addEventListener("DOMContentLoaded", () => {
-
 let questions = [];
-let current = 0;
-let correct = 0;
-let wrong = 0;
-let skipped = 0;
-let wrongDetails = [];
+let currentIndex = 0;
+let userAnswers = [];
+let wrongAnswers = [];
 
-const homeDiv = document.getElementById("home");
-const testDiv = document.getElementById("test");
-const resultDiv = document.getElementById("result");
+const fileInput = document.getElementById("docx-file");
+const startBtn = document.getElementById("start-btn");
+const quizSection = document.getElementById("quiz-section");
+const questionContainer = document.getElementById("question-container");
+const nextBtn = document.getElementById("next-btn");
+const resultSection = document.getElementById("result-section");
+const summary = document.getElementById("summary");
+const wrongDiv = document.getElementById("wrong-answers");
+const retryBtn = document.getElementById("retry-btn");
+const exitBtn = document.getElementById("exit-btn");
 
-const startBtn = document.getElementById("startBtn");
-const skipBtn = document.getElementById("skipBtn");
-const restartBtn = document.getElementById("restartBtn");
-const exitBtn = document.getElementById("exitBtn");
+// DOCX faylni o‘qish
+fileInput.addEventListener("change", () => {
+  const file = fileInput.files[0];
+  if (!file) return;
 
-startBtn.onclick = () => {
-  const file = document.getElementById("fileInput").files[0];
-  if (!file) return alert("Iltimos, fayl tanlang!");
+  mammoth.extractRawText({ arrayBuffer: file.arrayBuffer() }).then(result => {
+    parseQuestions(result.value);
+    if (questions.length > 0) startBtn.disabled = false;
+  }).catch(err => {
+    alert("Faylni o‘qib bo‘lmadi: " + err);
+  });
+});
 
-  const reader = new FileReader();
-  reader.onload = e => parseText(e.target.result);
-  reader.readAsText(file);
-};
-
-function parseText(text) {
-  const lines = text.split("\n");
-  let q = null;
+// Savollarni tahlil qilish
+function parseQuestions(text) {
   questions = [];
+  const lines = text.split(/\r?\n/).filter(line => line.trim() !== "");
+  let currentQ = null;
 
   lines.forEach(line => {
-    line = line.trim();
-    if (!line) return;
     if (line.startsWith("#")) {
-      if (q) questions.push(q);
-      q = { question: line.slice(1), answers: [], correct: "" };
+      if (currentQ) questions.push(currentQ);
+      currentQ = { question: line.substring(1).trim(), options: [], correct: "" };
     } else if (line.startsWith("+")) {
-      q.correct = line.slice(1);
-      q.answers.push(line.slice(1));
-    } else if (q) {
-      q.answers.push(line);
+      const ans = line.substring(1).trim();
+      currentQ.correct = ans;
+      currentQ.options.push(ans);
+    } else {
+      currentQ.options.push(line.trim());
     }
   });
-  if (q) questions.push(q);
+  if (currentQ) questions.push(currentQ);
 
-  // Randomlashtirish
-  questions.forEach(q => q.answers.sort(() => Math.random() - 0.5));
-  questions.sort(() => Math.random() - 0.5);
-
-  // DOM o‘zgarish
-  homeDiv.style.display = "none";
-  resultDiv.style.display = "none";
-  testDiv.style.display = "block";
-
-  showQuestion();
+  // Random variantlarni aralashtirish
+  questions.forEach(q => {
+    q.options = shuffleArray(q.options);
+  });
 }
+
+// Start test
+startBtn.addEventListener("click", () => {
+  document.getElementById("file-section").classList.add("hidden");
+  quizSection.classList.remove("hidden");
+  currentIndex = 0;
+  userAnswers = [];
+  wrongAnswers = [];
+  showQuestion();
+});
 
 function showQuestion() {
-  if (current >= questions.length) return finishTest();
-
-  const q = questions[current];
-  document.getElementById("question").innerText = q.question;
-
-  const box = document.getElementById("answers");
-  box.innerHTML = "";
-
-  q.answers.forEach(ans => {
-    const btn = document.createElement("button");
-    btn.textContent = ans;
-    btn.onclick = () => {
-      if (ans === q.correct) correct++;
-      else {
-        wrong++;
-        wrongDetails.push({ question: q.question, correct: q.correct, yourAnswer: ans });
-      }
-      current++;
-      showQuestion();
-    };
-    box.appendChild(btn);
+  const q = questions[currentIndex];
+  questionContainer.innerHTML = `<h3>${q.question}</h3>`;
+  q.options.forEach((opt, i) => {
+    const optionHTML = `<label class="option">
+      <input type="radio" name="option" value="${opt}"> ${opt}
+    </label>`;
+    questionContainer.innerHTML += optionHTML;
   });
 }
 
-skipBtn.onclick = () => {
-  skipped++;
-  wrongDetails.push({
-    question: questions[current].question,
-    correct: questions[current].correct,
-    yourAnswer: "Tashlab ketilgan"
-  });
-  current++;
-  showQuestion();
-};
+// Keyingi tugma
+nextBtn.addEventListener("click", () => {
+  const selected = document.querySelector('input[name="option"]:checked');
+  if (!selected) {
+    alert("Iltimos javob tanlang!");
+    return;
+  }
+  const answer = selected.value;
+  userAnswers.push(answer);
 
-function finishTest() {
-  testDiv.style.display = "none";
-  resultDiv.style.display = "block";
+  const correct = questions[currentIndex].correct;
+  if (answer !== correct) {
+    wrongAnswers.push({
+      question: questions[currentIndex].question,
+      yourAnswer: answer,
+      correctAnswer: correct
+    });
+  }
 
-  document.getElementById("stats").innerText =
-    `To‘g‘ri: ${correct}, Noto‘g‘ri: ${wrong}, Tashlab ketilgan: ${skipped}`;
-
-  const wrongBox = document.getElementById("wrongList");
-  wrongBox.innerHTML = "<h4>Xato qilgan savollar va to'g'ri javoblar:</h4>";
-
-  if (wrongDetails.length === 0) {
-    wrongBox.innerHTML += "<p>Hammasi to'g'ri ishlangan ✅</p>";
+  currentIndex++;
+  if (currentIndex < questions.length) {
+    showQuestion();
   } else {
-    wrongDetails.forEach((item, idx) => {
-      const p = document.createElement("p");
-      p.innerHTML = `<strong>${idx+1}. Savol:</strong> ${item.question}<br>
-                     <strong>To'g'ri javob:</strong> ${item.correct}<br>
-                     <strong>Sizning javobingiz:</strong> ${item.yourAnswer}`;
-      wrongBox.appendChild(p);
+    showResult();
+  }
+});
+
+// Natijani ko‘rsatish
+function showResult() {
+  quizSection.classList.add("hidden");
+  resultSection.classList.remove("hidden");
+  summary.textContent = `To‘g‘ri javoblar: ${questions.length - wrongAnswers.length}, Xato javoblar: ${wrongAnswers.length}`;
+
+  wrongDiv.innerHTML = "";
+  if (wrongAnswers.length > 0) {
+    wrongAnswers.forEach(w => {
+      wrongDiv.innerHTML += `<p><strong>Savol:</strong> ${w.question}<br>
+                             <strong>Sizning javobingiz:</strong> ${w.yourAnswer}<br>
+                             <strong>To‘g‘ri javob:</strong> ${w.correctAnswer}</p>`;
     });
   }
 }
 
-restartBtn.onclick = () => location.reload();
-exitBtn.onclick = () => {
-  resultDiv.style.display = "none";
-  homeDiv.style.display = "block";
-  current = correct = wrong = skipped = 0;
-  wrongDetails = [];
-};
-
+// Qayta ishlash va chiqish
+retryBtn.addEventListener("click", () => {
+  resultSection.classList.add("hidden");
+  fileInput.value = "";
+  startBtn.disabled = true;
+  document.getElementById("file-section").classList.remove("hidden");
 });
+
+exitBtn.addEventListener("click", () => {
+  location.reload();
+});
+
+// Helper: array aralashtirish
+function shuffleArray(array) {
+  return array.sort(() => Math.random() - 0.5);
+    }
