@@ -14,7 +14,7 @@ const exitBtn = document.getElementById("exitBtn");
 
 startBtn.onclick = () => {
   const file = document.getElementById("fileInput").files[0];
-  if (!file) return alert("Fayl tanlang (txt yoki docx formatida)");
+  if (!file) return alert("Iltimos, fayl tanlang!");
 
   const reader = new FileReader();
   reader.onload = e => parseText(e.target.result);
@@ -28,22 +28,27 @@ function parseText(text) {
 
   lines.forEach(line => {
     line = line.trim();
+    if (!line) return;
     if (line.startsWith("#")) {
       if (q) questions.push(q);
       q = { question: line.slice(1), answers: [], correct: "" };
     } else if (line.startsWith("+")) {
       q.correct = line.slice(1);
       q.answers.push(line.slice(1));
-    } else if (line && q) {
+    } else if (q) {
       q.answers.push(line);
     }
   });
+
   if (q) questions.push(q);
 
+  // Randomlashtirish
   questions.forEach(q => q.answers.sort(() => Math.random() - 0.5));
   questions.sort(() => Math.random() - 0.5);
 
+  // DOM o‘zgarish
   document.getElementById("home").style.display = "none";
+  document.getElementById("result").style.display = "none";
   document.getElementById("test").style.display = "block";
 
   showQuestion();
@@ -54,6 +59,7 @@ function showQuestion() {
 
   const q = questions[current];
   document.getElementById("question").innerText = q.question;
+
   const box = document.getElementById("answers");
   box.innerHTML = "";
 
@@ -64,7 +70,11 @@ function showQuestion() {
       if (ans === q.correct) correct++;
       else {
         wrong++;
-        wrongDetails.push({question: q.question, correct: q.correct, yourAnswer: ans});
+        wrongDetails.push({
+          question: q.question,
+          correct: q.correct,
+          yourAnswer: ans
+        });
       }
       current++;
       showQuestion();
@@ -92,21 +102,27 @@ function finishTest() {
     `To‘g‘ri: ${correct}, Noto‘g‘ri: ${wrong}, Tashlab ketilgan: ${skipped}`;
 
   const wrongBox = document.getElementById("wrongList");
-  wrongBox.innerHTML = "<h4>Xato qilgan savollar va javoblar:</h4>";
-  wrongDetails.forEach(item => {
-    const p = document.createElement("p");
-    p.innerHTML = `<strong>Savol:</strong> ${item.question}<br>
-                   <strong>To'g'ri javob:</strong> ${item.correct}<br>
-                   <strong>Sizning javobingiz:</strong> ${item.yourAnswer}`;
-    wrongBox.appendChild(p);
-  });
+  wrongBox.innerHTML = "<h4>Xato qilgan savollar va to'g'ri javoblar:</h4>";
+
+  if (wrongDetails.length === 0) {
+    wrongBox.innerHTML += "<p>Hammasi to'g'ri ishlangan ✅</p>";
+  } else {
+    wrongDetails.forEach((item, idx) => {
+      const p = document.createElement("p");
+      p.innerHTML = `<strong>${idx+1}. Savol:</strong> ${item.question}<br>
+                     <strong>To'g'ri javob:</strong> ${item.correct}<br>
+                     <strong>Sizning javobingiz:</strong> ${item.yourAnswer}`;
+      wrongBox.appendChild(p);
+    });
+  }
 }
 
 restartBtn.onclick = () => location.reload();
 exitBtn.onclick = () => {
   document.getElementById("result").style.display = "none";
   document.getElementById("home").style.display = "block";
-  current = 0; correct = 0; wrong = 0; skipped = 0; wrongDetails = [];
+  current = correct = wrong = skipped = 0;
+  wrongDetails = [];
 };
 
 });
