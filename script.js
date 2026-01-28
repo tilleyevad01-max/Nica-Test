@@ -7,6 +7,10 @@ let wrong = 0;
 let skipped = 0;
 let wrongDetails = [];
 
+const homeDiv = document.getElementById("home");
+const testDiv = document.getElementById("test");
+const resultDiv = document.getElementById("result");
+
 const startBtn = document.getElementById("startBtn");
 const skipBtn = document.getElementById("skipBtn");
 const restartBtn = document.getElementById("restartBtn");
@@ -39,7 +43,6 @@ function parseText(text) {
       q.answers.push(line);
     }
   });
-
   if (q) questions.push(q);
 
   // Randomlashtirish
@@ -47,9 +50,9 @@ function parseText(text) {
   questions.sort(() => Math.random() - 0.5);
 
   // DOM o‘zgarish
-  document.getElementById("home").style.display = "none";
-  document.getElementById("result").style.display = "none";
-  document.getElementById("test").style.display = "block";
+  homeDiv.style.display = "none";
+  resultDiv.style.display = "none";
+  testDiv.style.display = "block";
 
   showQuestion();
 }
@@ -70,11 +73,7 @@ function showQuestion() {
       if (ans === q.correct) correct++;
       else {
         wrong++;
-        wrongDetails.push({
-          question: q.question,
-          correct: q.correct,
-          yourAnswer: ans
-        });
+        wrongDetails.push({ question: q.question, correct: q.correct, yourAnswer: ans });
       }
       current++;
       showQuestion();
@@ -95,8 +94,8 @@ skipBtn.onclick = () => {
 };
 
 function finishTest() {
-  document.getElementById("test").style.display = "none";
-  document.getElementById("result").style.display = "block";
+  testDiv.style.display = "none";
+  resultDiv.style.display = "block";
 
   document.getElementById("stats").innerText =
     `To‘g‘ri: ${correct}, Noto‘g‘ri: ${wrong}, Tashlab ketilgan: ${skipped}`;
@@ -119,8 +118,8 @@ function finishTest() {
 
 restartBtn.onclick = () => location.reload();
 exitBtn.onclick = () => {
-  document.getElementById("result").style.display = "none";
-  document.getElementById("home").style.display = "block";
+  resultDiv.style.display = "none";
+  homeDiv.style.display = "block";
   current = correct = wrong = skipped = 0;
   wrongDetails = [];
 };
