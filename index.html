@@ -2,28 +2,39 @@
 <html lang="uz">
 <head>
   <meta charset="UTF-8">
-  <title>DOCX Test</title>
+  <title>DOCX Test Tizimi</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h2>DOCX test tizimi</h2>
+<h2>DOCX Test Tizimi</h2>
 
+<!-- Bosh sahifa -->
 <div id="home">
-  <input type="file" id="fileInput" accept=".docx">
+  <input type="file" id="fileInput" accept=".txt,.docx">
   <br><br>
   <button id="startBtn">Testni boshlash</button>
 </div>
 
+<!-- Test oynasi -->
 <div id="test" style="display:none;">
   <h3 id="question"></h3>
   <div id="answers"></div>
   <button id="skipBtn">Keyingi</button>
 </div>
 
+<!-- Natija oynasi -->
 <div id="result" style="display:none;">
   <h3>Natija</h3>
   <p id="stats"></p>
   <div id="wrongList"></div>
   <br>
+  <button id="restartBtn">Qayta ishlash</button>
+  <button id="exitBtn">Chiqish</button>
+</div>
+
+<!-- JS fayl -->
+<script src="script.js"></script>
+</body>
+  </html>
