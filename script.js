@@ -14,27 +14,34 @@ const wrongDiv = document.getElementById("wrong-answers");
 const retryBtn = document.getElementById("retry-btn");
 const exitBtn = document.getElementById("exit-btn");
 
-// DOCX faylni o‘qish
+// Fayl tanlanganda
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0];
   if (!file) return;
 
   const reader = new FileReader();
+
   reader.onload = function(e) {
     const arrayBuffer = e.target.result;
-    mammoth.extractRawText({ arrayBuffer: arrayBuffer })
-      .then(result => {
-        parseQuestions(result.value);
-        if (questions.length > 0) startBtn.disabled = false;
-      })
-      .catch(err => {
-        alert("Faylni o‘qib bo‘lmadi: " + err);
-      });
+
+    try {
+      mammoth.extractRawText({ arrayBuffer: arrayBuffer })
+        .then(result => {
+          parseQuestions(result.value);
+          if (questions.length > 0) startBtn.disabled = false;
+        })
+        .catch(err => {
+          alert("DOCX faylni o‘qib bo‘lmadi. Mobil brauzer bu faylni qo‘llab-quvvatlamasligi mumkin.\nIltimos, kompyuterda urinib ko‘ring.");
+        });
+    } catch (error) {
+      alert("DOCX faylni o‘qib bo‘lmadi. Mobil brauzer bu faylni qo‘llab-quvvatlamasligi mumkin.\nIltimos, kompyuterda urinib ko‘ring.");
+    }
   };
+
   reader.readAsArrayBuffer(file);
 });
 
-// Savollarni tahlil qilish
+// Savollarni parse qilish
 function parseQuestions(text) {
   questions = [];
   const lines = text.split(/\r?\n/).filter(line => line.trim() !== "");
@@ -70,7 +77,7 @@ startBtn.addEventListener("click", () => {
 function showQuestion() {
   const q = questions[currentIndex];
   questionContainer.innerHTML = `<h3>${q.question}</h3>`;
-  q.options.forEach((opt) => {
+  q.options.forEach(opt => {
     const optionHTML = `<label class="option">
       <input type="radio" name="option" value="${opt}"> ${opt}
     </label>`;
@@ -133,7 +140,7 @@ exitBtn.addEventListener("click", () => {
   location.reload();
 });
 
-// Helper: array aralashtirish
+// Array aralashtirish helper
 function shuffleArray(array) {
   return array.sort(() => Math.random() - 0.5);
-                            }
+  }
