@@ -14,11 +14,11 @@ const exitBtn = document.getElementById("exitBtn");
 
 startBtn.onclick = () => {
   const file = document.getElementById("fileInput").files[0];
-  if (!file) return alert("DOCX fayl tanlang");
+  if (!file) return alert("Fayl tanlang (txt yoki docx formatida)");
 
-  mammoth.extractRawText({ arrayBuffer: file })
-    .then(res => parseText(res.value))
-    .catch(() => alert("DOCX o‘qilmadi"));
+  const reader = new FileReader();
+  reader.onload = e => parseText(e.target.result);
+  reader.readAsText(file);
 };
 
 function parseText(text) {
@@ -40,7 +40,6 @@ function parseText(text) {
   });
   if (q) questions.push(q);
 
-  // Randomlashtirish
   questions.forEach(q => q.answers.sort(() => Math.random() - 0.5));
   questions.sort(() => Math.random() - 0.5);
 
@@ -51,10 +50,7 @@ function parseText(text) {
 }
 
 function showQuestion() {
-  if (current >= questions.length) {
-    finishTest();
-    return;
-  }
+  if (current >= questions.length) return finishTest();
 
   const q = questions[current];
   document.getElementById("question").innerText = q.question;
@@ -106,12 +102,10 @@ function finishTest() {
   });
 }
 
-// Qayta ishlash va chiqish
 restartBtn.onclick = () => location.reload();
 exitBtn.onclick = () => {
   document.getElementById("result").style.display = "none";
   document.getElementById("home").style.display = "block";
-  // Stat va wrong list tozalash
   current = 0; correct = 0; wrong = 0; skipped = 0; wrongDetails = [];
 };
 
