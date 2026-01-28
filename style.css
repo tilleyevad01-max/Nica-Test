@@ -1,4 +1,3 @@
-/* Body va umumiy font */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(120deg, #e0f7fa, #ffffff);
@@ -7,7 +6,6 @@ body {
     margin: 0;
 }
 
-/* Sarlavhalar */
 h2 {
     color: #00796b;
     font-size: 2rem;
@@ -19,7 +17,6 @@ h3 {
     margin-bottom: 15px;
 }
 
-/* Fayl input */
 input[type="file"] {
     padding: 12px;
     border: 2px solid #004d40;
@@ -28,7 +25,6 @@ input[type="file"] {
     margin: 10px 0;
 }
 
-/* Tugmalar */
 button {
     background-color: #00796b;
     color: white;
@@ -48,7 +44,6 @@ button:hover {
     box-shadow: 0 6px 12px rgba(0,0,0,0.3);
 }
 
-/* Test box */
 #answers {
     margin-top: 20px;
     display: flex;
@@ -61,7 +56,6 @@ button:hover {
     max-width: 400px;
 }
 
-/* Natija box */
 #result {
     background-color: #ffffff;
     padding: 20px;
@@ -72,34 +66,16 @@ button:hover {
     max-width: 500px;
 }
 
-/* Xato javoblar */
 #wrongList p {
     border-top: 1px solid #ccc;
     padding: 8px 0;
     margin: 5px 0;
 }
 
-/* Responsive design */
 @media (max-width: 600px) {
-    body {
-        padding: 15px;
-    }
-
-    h2 {
-        font-size: 1.6rem;
-    }
-    h3 {
-        font-size: 1.2rem;
-    }
-
-    button {
-        width: 90%;
-        padding: 12px;
-        font-size: 14px;
-    }
-
-    #result {
-        width: 95%;
-        padding: 15px;
-    }
-        }
+    body { padding: 15px; }
+    h2 { font-size: 1.6rem; }
+    h3 { font-size: 1.2rem; }
+    button { width: 90%; padding: 12px; font-size: 14px; }
+    #result { width: 95%; padding: 15px; }
+}
