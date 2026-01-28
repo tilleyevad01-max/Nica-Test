@@ -1,4 +1,3 @@
-/* Umumiy body */
 body {
     font-family: Arial, sans-serif;
     background-color: #f2f2f2;
@@ -6,12 +5,10 @@ body {
     padding: 20px;
 }
 
-/* Sarlavhalar */
 h2, h3 {
     color: #333;
 }
 
-/* Tugmalar */
 button {
     background-color: #4CAF50;
     color: white;
@@ -27,31 +24,24 @@ button:hover {
     background-color: #45a049;
 }
 
-/* Input fayl */
 input[type="file"] {
     padding: 10px;
     margin: 10px 0;
 }
 
-/* Test box */
-#answers {
-    margin-top: 15px;
-}
+#answers { margin-top: 15px; }
 
-/* Natija */
 #result {
     background-color: #fff;
     padding: 15px;
     border-radius: 10px;
     display: inline-block;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    text-align: left;
 }
 
-/* Responsive */
+#wrongList p { border-top: 1px solid #ccc; padding: 5px 0; }
+
 @media (max-width: 600px) {
-    button {
-        width: 80%;
-        padding: 10px;
-        font-size: 14px;
-    }
+    button { width: 80%; padding: 10px; font-size: 14px; }
 }
